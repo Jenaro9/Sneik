@@ -1,0 +1,11 @@
+# Ejecutables
+*.exe
+*.out
+main
+
+# Objetos
+*.o
+*.obj
+
+# Congiuraciones de vscode
+.vscode/
