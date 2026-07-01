@@ -7,18 +7,24 @@
 // .
 // Constantes: Definir dimensiones del tablero y caracteres usando #define
 // .
-#include <stdbool.h> // Para usar tipos booleanos [11]
-
-#define FILAS 20
-#define COLS 40
+// snake.h
+#ifndef SNAKE_H
+#define SNAKE_H
 
 typedef struct Nodo {
     int fila;
-    int col;
-    struct Nodo *sig;
+    int columna;
+    struct Nodo *siguiente;
 } Nodo;
 
 typedef struct {
-    char nombre[12];
-    int puntajeMax;
-} Jugador;
+    Nodo *cabeza;
+    int longitud;
+} Serpiente;
+
+void inicializarSerpiente(Serpiente *s, int filaInicial, int colInicial);
+void moverSerpiente(Serpiente *s, int nuevaFila, int nuevaCol, int crecio);
+void liberarSerpiente(Serpiente *s);
+int colisionaConCuerpo(Serpiente *s, int fila, int col);
+
+#endif

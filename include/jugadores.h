@@ -1,0 +1,1 @@
+// struct Jugador, prototipos lista/ranking

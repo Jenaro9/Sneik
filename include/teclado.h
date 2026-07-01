@@ -1,0 +1,1 @@
+// input no bloqueante (multiplataforma)

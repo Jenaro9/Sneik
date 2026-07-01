@@ -1,0 +1,1 @@
+// dibujo en consola, mensajes de UI

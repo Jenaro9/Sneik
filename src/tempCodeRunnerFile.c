@@ -6,22 +6,17 @@
 //     se debe pedir el nombre del jugador, buscarlo en la lista dinámica de jugadores(o agregarlo) y guardar el ranking actualizado en un archivo
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 #include "tablero.h"
 
 int main()
 {
     int tablero[FILAS][COLUMNAS];
-    Manzana m;
     int i, j;
 
     // Probamos inicializarTablero
     inicializarTablero(tablero);
 
-    generarManzana(&m, tablero);
-    generarManzana(&m, tablero);
-    generarManzana(&m, tablero);
+    void generarManzana(Manzana * m, int tablero[FILAS][COLUMNAS]);
 
     return 0;
 }
