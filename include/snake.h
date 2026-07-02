@@ -8,6 +8,10 @@
 // Constantes: Definir dimensiones del tablero y caracteres usando #define
 // .
 // snake.h
+
+#ifndef SNAKE_H // Si no se definió este archivo...
+#define SNAKE_H // ...definilo ahora (evita errores si se incluye dos veces)
+
 typedef enum
 {
     ARRIBA,    // Internamente es 0
@@ -15,10 +19,6 @@ typedef enum
     IZQUIERDA, // Internamente es 2
     DERECHA    // Internamente es 3
 } Direccion;
-#ifndef SNAKE_H // Si no se definió este archivo...
-#define SNAKE_H // ...definilo ahora (evita errores si se incluye dos veces)
-
-// --- DEFINICIÓN DE ESTRUCTURAS ---
 
 // Nodo de la lista enlazada simple: representa un segmento del cuerpo
 typedef struct Nodo
@@ -46,8 +46,5 @@ void moverSerpiente(Serpiente *s, int nuevaFila, int nuevaCol, int crecio);
 
 // Al terminar el juego, libera toda la memoria reservada con malloc (evita fugas)
 void liberarSerpiente(Serpiente *s);
-
-// Recorre la lista buscando si las coordenadas (fila, col) ya están ocupadas
-// Devuelve 1 si hay colisión, 0 si está libre
 
 #endif // Fin del #ifndef

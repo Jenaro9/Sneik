@@ -11,6 +11,8 @@
 #include <windows.h>
 #include "tablero.h"
 #include "visuales.h"
+#include "snake.h"
+#include <conio.h>
 
 int main()
 {
@@ -83,7 +85,7 @@ int main()
         }
 
         // C) VERIFICACIÓN DE COLISIONES
-        if (colisionaConCuerpo(&s, nuevaFila, nuevaCol))
+        if (colisionaConCuerpo(tablero, nuevaFila, nuevaCol))
         {
             gameOver = 1;
         }
@@ -94,7 +96,7 @@ int main()
         }
 
         // D) REDIBUJAR
-        // dibujoTablero(tablero, &s); // Tu función de dibujo
+        dibujoTablero(tablero, &s); // Tu función de dibujo
 
         // E) VELOCIDAD
         Sleep(100); // 100ms de pausa

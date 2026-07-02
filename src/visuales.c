@@ -1,8 +1,10 @@
-// Interfaz y Visuales (src/visuales.c)
-// Aquí se maneja el redibujado de la pantalla
-// .
-// Limpieza de Pantalla: Usar system("cls") (en Windows) antes de cada redibujado para simular movimiento
-// .
-// Dibujar Tablero: Utilizar un ciclo for anidado para recorrer la matriz y mostrar los caracteres correspondientes (bordes, cuerpo de serpiente, manzana)
-// .
-// Puntaje: Mostrar el puntaje actual en cada iteración del bucle
+#include <stdio.h>
+#include "visuales.h"
+
+// STUB TEMPORAL: todavía no dibuja nada de verdad, solo existe
+// para que el programa compile. Se reemplaza cuando hagamos
+// la función real de dibujado.
+void dibujoTablero(int tablero[FILAS][COLUMNAS], Serpiente *s)
+{
+    printf("(dibujo pendiente)\n");
+}
