@@ -4,6 +4,10 @@
 #define FILAS 20
 #define COLUMNAS 40
 
+#define VACIO 0
+#define CUERPO 1
+#define MANZANA 2
+
 typedef struct
 {
     int fila;
@@ -11,7 +15,8 @@ typedef struct
 } Manzana;
 
 void inicializarTablero(int tablero[FILAS][COLUMNAS]);
-void generarManzana(Manzana *m, int tablero[FILAS][COLUMNAS]);
 int fueraDeLimites(int fila, int col);
+void generarManzana(Manzana *m, int tablero[FILAS][COLUMNAS]);
+int colisionaConCuerpo(int tablero[FILAS][COLUMNAS], int fila, int columna);
 
 #endif

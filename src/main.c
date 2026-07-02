@@ -19,8 +19,7 @@ int main()
     // Probamos inicializarTablero
     inicializarTablero(tablero);
 
-    generarManzana(&m, tablero);
-    generarManzana(&m, tablero);
+    srand(time(NULL));
     generarManzana(&m, tablero);
 
     return 0;

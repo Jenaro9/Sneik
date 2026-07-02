@@ -25,6 +25,5 @@ typedef struct {
 void inicializarSerpiente(Serpiente *s, int filaInicial, int colInicial);
 void moverSerpiente(Serpiente *s, int nuevaFila, int nuevaCol, int crecio);
 void liberarSerpiente(Serpiente *s);
-int colisionaConCuerpo(Serpiente *s, int fila, int col);
 
 #endif

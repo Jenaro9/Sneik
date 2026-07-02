@@ -29,8 +29,20 @@ int fueraDeLimites(int nuevaFila, int nuevaColumna)
 void generarManzana(Manzana *m, int tablero[FILAS][COLUMNAS])
 {
 
-    int filaRandom = rand() % FILAS;
-    int columnaRandom = rand() % COLUMNAS;
+    int filaRandom;
+    int columnaRandom;
 
-    printf("%d %d \n", filaRandom, columnaRandom);
+    do
+    {
+        filaRandom = rand() % FILAS;
+        columnaRandom = rand() % COLUMNAS;
+    } while (tablero[filaRandom][columnaRandom] != 0);
+
+    m->fila = filaRandom;
+    m->columna = columnaRandom;
+}
+
+int colisionaConCuerpo(int tablero[FILAS][COLUMNAS], int fila, int columna)
+{
+    return tablero[fila][columna] == CUERPO;
 }
