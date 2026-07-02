@@ -8,7 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <windows.h>
 #include "tablero.h"
+#include "visuales.h"
 
 int main()
 {
