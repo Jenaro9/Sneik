@@ -25,7 +25,30 @@ int fueraDeLimites(int nuevaFila, int nuevaColumna)
         return 1;
     }
 }
+void actualizarMatrizSerpiente(int tablero[FILAS][COLUMNAS], Serpiente *s)
+{
+    // 1. Primero "limpiamos" toda la matriz de cuerpo viejo,
+    //    así no queda basura de la vuelta anterior (ej: la cola que se movió)
+    int i, j;
+    for (i = 0; i < FILAS; i++)
+    {
+        for (j = 0; j < COLUMNAS; j++)
+        {
+            if (tablero[i][j] == CUERPO)
+            {
+                tablero[i][j] = VACIO;
+            }
+        }
+    }
 
+    // 2. Recorremos la lista actual y marcamos CUERPO en cada nodo vigente
+    Nodo *temp = s->cabeza;
+    while (temp != NULL)
+    {
+        tablero[temp->fila][temp->columna] = CUERPO;
+        temp = temp->siguiente;
+    }
+}
 void generarManzana(Manzana *m, int tablero[FILAS][COLUMNAS])
 {
 

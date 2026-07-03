@@ -1,10 +1,32 @@
 #include <stdio.h>
 #include "visuales.h"
+#include <stdlib.h>
 
-// STUB TEMPORAL: todavía no dibuja nada de verdad, solo existe
-// para que el programa compile. Se reemplaza cuando hagamos
-// la función real de dibujado.
-void dibujoTablero(int tablero[FILAS][COLUMNAS], Serpiente *s)
+void dibujoTablero(int tablero[FILAS][COLUMNAS], Serpiente *s, int puntaje)
 {
-    printf("(dibujo pendiente)\n");
-}
+    system("cls");
+    int i, j;
+
+    for (i = 0; i < FILAS; i++)
+    {
+        for (j = 0; j < COLUMNAS; j++)
+        {
+            switch (tablero[i][j])
+            {
+            case CUERPO:
+                printf("O");
+                break;
+            case MANZANA:
+                printf("@");
+                break;
+                break;
+            default:
+                printf(" ");
+                break;
+            }
+        }
+        printf("\n");
+    } // <-- cierra el for de i (esto es lo que faltaba)
+
+    printf("Puntaje: %d\n", puntaje);
+} // <-- cierra la función dibujoTablero

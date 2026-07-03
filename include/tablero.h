@@ -8,12 +8,14 @@
 #define CUERPO 1
 #define MANZANA 2
 
+#include "snake.h"
+
 typedef struct
 {
     int fila;
     int columna;
 } Manzana;
-
+void actualizarMatrizSerpiente(int tablero[FILAS][COLUMNAS], Serpiente *s);
 void inicializarTablero(int tablero[FILAS][COLUMNAS]);
 int fueraDeLimites(int fila, int col);
 void generarManzana(Manzana *m, int tablero[FILAS][COLUMNAS]);

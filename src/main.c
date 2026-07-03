@@ -1,10 +1,3 @@
-// Control Principal(src / main.c)
-//     El núcleo del programa será un bucle iterativo(while o do... while) que controle el flujo del juego
-//         .Bucle de Juego : Capturar tecla(investigar _kbhit() y _getch() para Windows)
-//         .Actualizar lógica de posición.Verificar colisiones.Redibujar tablero.Controlar la velocidad mediante Sleep()
-//         .Persistencia : Al finalizar,
-//     se debe pedir el nombre del jugador, buscarlo en la lista dinámica de jugadores(o agregarlo) y guardar el ranking actualizado en un archivo
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -18,24 +11,21 @@ int main()
 {
     int tablero[FILAS][COLUMNAS];
     Manzana m;
-    int i, j;
+    int puntaje = 0;
+    int velocidad = 150;
 
-    // Probamos inicializarTablero
     inicializarTablero(tablero);
-
     srand(time(NULL));
     generarManzana(&m, tablero);
 
-    // 1. CONFIGURACIÓN INICIAL
     int gameOver = 0;
     Direccion dirActual = DERECHA;
     Serpiente s;
-    inicializarSerpiente(&s, 10, 10); // Empieza en el medio
+    inicializarSerpiente(&s, 10, 10);
+    tablero[10][10] = CUERPO; // marcar la posición inicial también
 
-    // 2. BUCLE PRINCIPAL DEL JUEGO
     while (!gameOver)
     {
-
         // A) CAPTURA DE TECLAS
         if (_kbhit())
         {
@@ -59,12 +49,11 @@ int main()
                 break;
             case 'x':
                 gameOver = 1;
-                break; // Salir con X
+                break;
             }
         }
 
         // B) LÓGICA DE MOVIMIENTO
-        // Acá calculás la nueva posición según dirActual
         int nuevaFila = s.cabeza->fila;
         int nuevaCol = s.cabeza->columna;
 
@@ -84,29 +73,48 @@ int main()
             break;
         }
 
-        // C) VERIFICACIÓN DE COLISIONES
-        if (colisionaConCuerpo(tablero, nuevaFila, nuevaCol))
+        // C) VERIFICACIÓN DE COLISIONES Y MOVIMIENTO
+        if (fueraDeLimites(nuevaFila, nuevaCol))
+        {
+            gameOver = 1;
+        }
+        else if (colisionaConCuerpo(tablero, nuevaFila, nuevaCol))
         {
             gameOver = 1;
         }
         else
         {
-            // Mover (el 0 es "no comió manzana", después deberías chequear eso con tu tablero)
-            moverSerpiente(&s, nuevaFila, nuevaCol, 0);
+            int crecio = (nuevaFila == m.fila && nuevaCol == m.columna);
+
+            moverSerpiente(&s, nuevaFila, nuevaCol, crecio);
+            actualizarMatrizSerpiente(tablero, &s);
+
+            if (crecio)
+            {
+                if (velocidad > 50) // un piso para que no quede imposible de jugar
+                {
+                    velocidad -= 5;
+                }
+                puntaje += 10;
+                generarManzana(&m, tablero);
+            }
+
+            // marcar la manzana actual en la matriz para que se vea/valide
+            tablero[m.fila][m.columna] = MANZANA;
         }
 
         // D) REDIBUJAR
-        dibujoTablero(tablero, &s); // Tu función de dibujo
+        dibujoTablero(tablero, &s, puntaje);
 
         // E) VELOCIDAD
-        Sleep(100); // 100ms de pausa
+        Sleep(velocidad);
     }
 
-    // 3. CIERRE Y PERSISTENCIA
-    printf("Juego terminado. Tu puntaje fue: %d\n", s.longitud);
-    liberarSerpiente(&s); // ¡IMPORTANTE: Limpiamos la lista al final!
+    printf("Juego terminado. Tu puntaje fue: %d\n", puntaje);
+    liberarSerpiente(&s);
 
-    // Aquí iría tu lógica de guardar el ranking en archivo
+    // TODO Juli: acá va la lógica de pedir nombre, buscar/agregar
+    // en la lista de jugadores, y guardar el ranking en archivo
 
     return 0;
 }
