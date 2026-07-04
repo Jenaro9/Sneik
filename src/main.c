@@ -1,70 +1,102 @@
-// Control Principal(src / main.c)
-//     El núcleo del programa será un bucle iterativo(while o do... while) que controle el flujo del juego
-//         .Bucle de Juego : Capturar tecla(investigar _kbhit() y _getch() para Windows)
-//         .Actualizar lógica de posición.Verificar colisiones.Redibujar tablero.Controlar la velocidad mediante Sleep()
-//         .Persistencia : Al finalizar,
-//     se debe pedir el nombre del jugador, buscarlo en la lista dinámica de jugadores(o agregarlo) y guardar el ranking actualizado en un archivo
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <conio.h>
 #include <windows.h>
 #include "tablero.h"
 #include "visuales.h"
-#include "snake.h"
-#include <conio.h>
+#include "teclado.h"
+#include "jugadores.h"
 
 int main()
 {
     int tablero[FILAS][COLUMNAS];
     Manzana m;
-    int i, j;
+    int puntaje = 0;
+    int velocidad = 50;
+    int opcion;
+    int cantidad = 0;
+    Obstaculo obstaculos[MAX_OBSTACULOS];
 
-    // Probamos inicializarTablero
+    do
+    {
+        system("cls");
+        printf("=== BIVORITA ===\n\n");
+        printf("1. Jugar\n");
+        printf("2. Salir\n");
+        printf("Opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion)
+        {
+        case 1:
+            break;
+        case 2:
+            printf("Gracias por jugar!\n");
+            return 0;
+
+        default:
+            break;
+        }
+    } while (opcion != 1 && opcion != 2);
+
+    printf("Elegi la dificultad:\n");
+    printf("1) Facil\n");
+    printf("2) Media\n");
+    printf("3) Dificil\n");
+
+    do
+    {
+        printf("Opcion: ");
+        scanf("%d", &opcion);
+        switch (opcion)
+        {
+        case 1:
+            velocidad = 200;
+            break;
+        case 2:
+            cantidad = 5;
+            velocidad = 150;
+            break;
+        case 3:
+            cantidad = 15;
+            velocidad = 100;
+            break;
+        default:
+            printf("Seleccione una dificultad valida por favor \n");
+            break;
+        }
+    } while (opcion < 1 || opcion > 3);
+
+    while (_kbhit()) // limpia el '\n' que dejó el scanf
+    {
+        _getch();
+    }
+
     inicializarTablero(tablero);
-
     srand(time(NULL));
-    generarManzana(&m, tablero);
 
-    // 1. CONFIGURACIÓN INICIAL
     int gameOver = 0;
     Direccion dirActual = DERECHA;
     Serpiente s;
-    inicializarSerpiente(&s, 10, 10); // Empieza en el medio
+    inicializarSerpiente(&s, 10, 10);
+    tablero[10][10] = CUERPO; // marcar la posición inicial también
 
-    // 2. BUCLE PRINCIPAL DEL JUEGO
+    generarManzana(&m, tablero);
+    tablero[m.fila][m.columna] = MANZANA;
+    generarObstaculos(tablero, obstaculos, cantidad);
+
+    ocultarCursor();
+
+    printf("Usa W A S D para moverte. Evita usar el mouse dentro de la consola.\n");
+    printf("Presiona cualquier tecla para comenzar...\n");
+    _getch();
     while (!gameOver)
     {
-
         // A) CAPTURA DE TECLAS
-        if (_kbhit())
-        {
-            switch (_getch())
-            {
-            case 'w':
-                if (dirActual != ABAJO)
-                    dirActual = ARRIBA;
-                break;
-            case 's':
-                if (dirActual != ARRIBA)
-                    dirActual = ABAJO;
-                break;
-            case 'a':
-                if (dirActual != DERECHA)
-                    dirActual = IZQUIERDA;
-                break;
-            case 'd':
-                if (dirActual != IZQUIERDA)
-                    dirActual = DERECHA;
-                break;
-            case 'x':
-                gameOver = 1;
-                break; // Salir con X
-            }
-        }
+        leerTecla(&dirActual, &gameOver);
 
         // B) LÓGICA DE MOVIMIENTO
-        // Acá calculás la nueva posición según dirActual
         int nuevaFila = s.cabeza->fila;
         int nuevaCol = s.cabeza->columna;
 
@@ -84,29 +116,63 @@ int main()
             break;
         }
 
-        // C) VERIFICACIÓN DE COLISIONES
-        if (colisionaConCuerpo(tablero, nuevaFila, nuevaCol))
+        // C) VERIFICACIÓN DE COLISIONES Y MOVIMIENTO
+        int crecio = (nuevaFila == m.fila && nuevaCol == m.columna);
+
+        if (fueraDeLimites(nuevaFila, nuevaCol))
+        {
+            gameOver = 1;
+        }
+        else if (colisionaConCuerpoLista(&s, nuevaFila, nuevaCol, !crecio) || colisionaConObstaculo(obstaculos, cantidad, nuevaFila, nuevaCol))
         {
             gameOver = 1;
         }
         else
         {
-            // Mover (el 0 es "no comió manzana", después deberías chequear eso con tu tablero)
-            moverSerpiente(&s, nuevaFila, nuevaCol, 0);
+            moverSerpiente(&s, nuevaFila, nuevaCol, crecio);
+            actualizarMatrizSerpiente(tablero, &s);
+
+            if (crecio)
+            {
+                if (velocidad > 50) // un piso para que no quede imposible de jugar
+                {
+                    velocidad -= 5;
+                }
+                puntaje += 1;
+                generarManzana(&m, tablero);
+            }
+
+            // marcar la manzana actual en la matriz para que se vea/valide
+            tablero[m.fila][m.columna] = MANZANA;
         }
 
         // D) REDIBUJAR
-        dibujoTablero(tablero, &s); // Tu función de dibujo
+        dibujoTablero(tablero, &s, puntaje);
 
         // E) VELOCIDAD
-        Sleep(100); // 100ms de pausa
+        Sleep(velocidad);
     }
 
-    // 3. CIERRE Y PERSISTENCIA
-    printf("Juego terminado. Tu puntaje fue: %d\n", s.longitud);
-    liberarSerpiente(&s); // ¡IMPORTANTE: Limpiamos la lista al final!
+    printf("Juego terminado. Tu puntaje fue: %d\n", puntaje);
+    liberarSerpiente(&s);
 
-    // Aquí iría tu lógica de guardar el ranking en archivo
+    while (_kbhit())
+    {
+        _getch();
+    }
+
+    // Gestión de jugadores y ranking
+    Jugador *listaJugadores = cargarRanking();
+
+    char nombreJugador[MAX_NOMBRE];
+    printf("Ingresa tu nombre: ");
+    scanf("%9s", nombreJugador);
+    normalizarNombre(nombreJugador);
+
+    listaJugadores = registrarPuntaje(listaJugadores, nombreJugador, puntaje);
+    guardarRanking(listaJugadores);
+    mostrarRanking(listaJugadores);
+    liberarJugadores(listaJugadores);
 
     return 0;
 }

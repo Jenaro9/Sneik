@@ -1,13 +1,3 @@
-// . Definición de Estructuras y Constantes (include/snake.h)
-// En este archivo deben definir los registros (structs) necesarios para representar la serpiente y los jugadores
-// .
-// Nodo de la Serpiente: Utilizarán una lista simplemente enlazada donde cada nodo guarda su posición (fila, columna)
-// .
-// Registro de Jugador: Para guardar el nombre y el puntaje máximo
-// .
-// Constantes: Definir dimensiones del tablero y caracteres usando #define
-// .
-// snake.h
 
 #ifndef SNAKE_H // Si no se definió este archivo...
 #define SNAKE_H // ...definilo ahora (evita errores si se incluye dos veces)

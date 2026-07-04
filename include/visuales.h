@@ -4,6 +4,7 @@
 #include "tablero.h"
 #include "snake.h"
 
-void dibujoTablero(int tablero[FILAS][COLUMNAS], Serpiente *s);
+void dibujoTablero(int tablero[FILAS][COLUMNAS], Serpiente *s, int puntaje);
+void ocultarCursor();
 
 #endif
