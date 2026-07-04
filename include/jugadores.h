@@ -1,13 +1,17 @@
 #ifndef JUGADORES_H
 #define JUGADORES_H
 
-#define ARCHIVO_RANKING "ranking.txt"
-#define MAX_NOMBRE 10
+#define ARCHIVO_RANKING "ranking.txt" // nombre del archivo donde se guarda el ranking en disco
+#define MAX_NOMBRE 10                 // longitud maxima del nombre de un jugador (+1 para el '\0')
+
+// Un jugador es un nodo de OTRA lista enlazada (independiente de la de la
+// serpiente): guarda su nombre, su mejor puntaje historico, y el puntero
+// al siguiente jugador de la lista.
 typedef struct Jugador
 {
-    char nombre[MAX_NOMBRE];
-    int puntajeMaximo;
-    struct Jugador *siguiente;
+    char nombre[MAX_NOMBRE];   // array de caracteres (string) de tamano fijo
+    int puntajeMaximo;         // el mejor puntaje que hizo ese jugador hasta ahora
+    struct Jugador *siguiente; // encadena con el proximo jugador (NULL si es el ultimo)
 } Jugador;
 
 // Carga todos los jugadores guardados en el archivo a una lista en memoria
@@ -26,6 +30,7 @@ void mostrarRanking(Jugador *lista);
 // Libera toda la memoria de la lista al finalizar
 void liberarJugadores(Jugador *lista);
 
+// Pasa el nombre a mayusculas "en el lugar" (modifica el mismo array recibido)
 void normalizarNombre(char *nombre);
 
 #endif

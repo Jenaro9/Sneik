@@ -1,0 +1,6 @@
+JULI 4
+1 1
+DDD 2
+AFF 4
+1DDD 9
+TTT 7

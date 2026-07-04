@@ -1,7 +1,10 @@
-
 #ifndef SNAKE_H // Si no se definió este archivo...
 #define SNAKE_H // ...definilo ahora (evita errores si se incluye dos veces)
 
+// Enum de direcciones posibles. Internamente cada nombre es un numero entero
+// correlativo empezando en 0 (podés pensarlo como "#define ARRIBA 0", etc.,
+// pero con chequeo de tipos: el compilador sabe que una variable "Direccion"
+// solo deberia guardar uno de estos 4 valores).
 typedef enum
 {
     ARRIBA,    // Internamente es 0
@@ -15,7 +18,10 @@ typedef struct Nodo
 {
     int fila;               // Posición vertical en el tablero
     int columna;            // Posición horizontal en el tablero
-    struct Nodo *siguiente; // Puntero al siguiente eslabón del cuerpo
+    struct Nodo *siguiente; // Puntero al siguiente eslabón del cuerpo (NULL si es el último)
+    // Nota: adentro de la propia definicion de "struct Nodo" hace falta escribir
+    // "struct Nodo *siguiente" (con la palabra struct) y no "Nodo *siguiente",
+    // porque el typedef "Nodo" recien queda disponible DESPUES del ; final de este bloque.
 } Nodo;
 
 // Estructura contenedora de la serpiente: facilita el acceso rápido a la cabeza
@@ -25,7 +31,7 @@ typedef struct
     int longitud; // Contador útil para saber el puntaje actual
 } Serpiente;
 
-// --- PROTOTIPOS DE FUNCIONES ---
+// --- PROTOTIPOS DE FUNCIONES (implementadas en snake.c) ---
 
 // Prepara la serpiente al iniciar el juego: crea el primer nodo en una posición
 void inicializarSerpiente(Serpiente *s, int filaInicial, int colInicial);
