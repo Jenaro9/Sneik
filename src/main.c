@@ -1,18 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <conio.h>
 #include <windows.h>
 #include "tablero.h"
 #include "visuales.h"
 #include "snake.h"
-#include <conio.h>
+#include "teclado.h"
+#include "jugadores.h"
 
 int main()
 {
     int tablero[FILAS][COLUMNAS];
     Manzana m;
     int puntaje = 0;
-    int velocidad = 150;
+    int velocidad = 50;
 
     inicializarTablero(tablero);
     srand(time(NULL));
@@ -24,34 +26,15 @@ int main()
     inicializarSerpiente(&s, 10, 10);
     tablero[10][10] = CUERPO; // marcar la posición inicial también
 
+    ocultarCursor();
+
+    printf("Usa W A S D para moverte. Evita usar el mouse dentro de la consola.\n");
+    printf("Presiona cualquier tecla para comenzar...\n");
+    _getch();
     while (!gameOver)
     {
         // A) CAPTURA DE TECLAS
-        if (_kbhit())
-        {
-            switch (_getch())
-            {
-            case 'w':
-                if (dirActual != ABAJO)
-                    dirActual = ARRIBA;
-                break;
-            case 's':
-                if (dirActual != ARRIBA)
-                    dirActual = ABAJO;
-                break;
-            case 'a':
-                if (dirActual != DERECHA)
-                    dirActual = IZQUIERDA;
-                break;
-            case 'd':
-                if (dirActual != IZQUIERDA)
-                    dirActual = DERECHA;
-                break;
-            case 'x':
-                gameOver = 1;
-                break;
-            }
-        }
+        leerTecla(&dirActual, &gameOver);
 
         // B) LÓGICA DE MOVIMIENTO
         int nuevaFila = s.cabeza->fila;
@@ -113,8 +96,23 @@ int main()
     printf("Juego terminado. Tu puntaje fue: %d\n", puntaje);
     liberarSerpiente(&s);
 
-    // TODO Juli: acá va la lógica de pedir nombre, buscar/agregar
-    // en la lista de jugadores, y guardar el ranking en archivo
+    while (_kbhit())
+    {
+        _getch();
+    }
+
+    // Gestión de jugadores y ranking
+    Jugador *listaJugadores = cargarRanking();
+
+    char nombreJugador[MAX_NOMBRE];
+    printf("Ingresa tu nombre: ");
+    scanf("%s", nombreJugador);
+    normalizarNombre(nombreJugador);
+
+    listaJugadores = registrarPuntaje(listaJugadores, nombreJugador, puntaje);
+    guardarRanking(listaJugadores);
+    mostrarRanking(listaJugadores);
+    liberarJugadores(listaJugadores);
 
     return 0;
 }
