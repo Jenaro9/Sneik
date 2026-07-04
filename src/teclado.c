@@ -3,24 +3,26 @@
 
 void leerTecla(Direccion *dirActual, int *gameOver)
 {
+    Direccion direccionOriginal = *dirActual; // fijamos la direccion real de este frame
+
     while (_kbhit())
     {
         switch (_getch())
         {
         case 'w':
-            if (*dirActual != ABAJO)
+            if (direccionOriginal != ABAJO)
                 *dirActual = ARRIBA;
             break;
         case 's':
-            if (*dirActual != ARRIBA)
+            if (direccionOriginal != ARRIBA)
                 *dirActual = ABAJO;
             break;
         case 'a':
-            if (*dirActual != DERECHA)
+            if (direccionOriginal != DERECHA)
                 *dirActual = IZQUIERDA;
             break;
         case 'd':
-            if (*dirActual != IZQUIERDA)
+            if (direccionOriginal != IZQUIERDA)
                 *dirActual = DERECHA;
             break;
         case 'x':

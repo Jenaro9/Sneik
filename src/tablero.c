@@ -65,7 +65,54 @@ void generarManzana(Manzana *m, int tablero[FILAS][COLUMNAS])
     m->columna = columnaRandom;
 }
 
-int colisionaConCuerpo(int tablero[FILAS][COLUMNAS], int fila, int columna)
+int colisionaConCuerpoLista(Serpiente *s, int fila, int col, int ignorarCola)
 {
-    return tablero[fila][columna] == CUERPO;
+    Nodo *actual = s->cabeza;
+    while (actual != NULL)
+    {
+        // si hay que ignorar la cola y este es el ultimo nodo, no lo comparamos
+        if (ignorarCola && actual->siguiente == NULL)
+        {
+            break;
+        }
+        if (actual->fila == fila && actual->columna == col)
+        {
+            return 1;
+        }
+        actual = actual->siguiente;
+    }
+    return 0;
+}
+void generarObstaculos(int tablero[FILAS][COLUMNAS], Obstaculo obstaculos[], int cantidad)
+{
+    int i;
+    int filaRandom, columnaRandom;
+
+    for (i = 0; i < cantidad; i++)
+    {
+        do
+        {
+            filaRandom = rand() % FILAS;
+            columnaRandom = rand() % COLUMNAS;
+        } while (tablero[filaRandom][columnaRandom] != 0);
+
+        tablero[filaRandom][columnaRandom] = OBSTACULO; // para que se dibuje
+
+        // guardamos la posicion tambien en el array de structs
+        obstaculos[i].fila = filaRandom;
+        obstaculos[i].columna = columnaRandom;
+    }
+}
+
+int colisionaConObstaculo(Obstaculo obstaculos[], int cantidad, int fila, int columna)
+{
+    int i;
+    for (i = 0; i < cantidad; i++)
+    {
+        if (obstaculos[i].fila == fila && obstaculos[i].columna == columna)
+        {
+            return 1;
+        }
+    }
+    return 0;
 }

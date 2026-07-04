@@ -42,6 +42,11 @@ void dibujoTablero(int tablero[FILAS][COLUMNAS], Serpiente *s, int puntaje)
                     printf("*");
                     setColor(7);
                     break;
+                case OBSTACULO:
+                    setColor(14);
+                    printf("x");
+                    setColor(7);
+                    break;
                 default:
                     printf(" ");
                     break;

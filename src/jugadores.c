@@ -19,7 +19,7 @@ Jugador *cargarRanking(void)
     int puntajeLeido;
 
     // Cada línea del archivo tiene el formato: nombre puntaje
-    while (fscanf(archivo, "%s %d", nombreLeido, &puntajeLeido) == 2)
+    while (fscanf(archivo, "%9s %d", nombreLeido, &puntajeLeido) == 2)
     {
         Jugador *nuevo = (Jugador *)malloc(sizeof(Jugador));
         if (nuevo == NULL)

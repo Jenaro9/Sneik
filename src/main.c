@@ -5,7 +5,6 @@
 #include <windows.h>
 #include "tablero.h"
 #include "visuales.h"
-#include "snake.h"
 #include "teclado.h"
 #include "jugadores.h"
 
@@ -15,16 +14,77 @@ int main()
     Manzana m;
     int puntaje = 0;
     int velocidad = 50;
+    int opcion;
+    int cantidad = 0;
+    Obstaculo obstaculos[MAX_OBSTACULOS];
+
+    do
+    {
+        system("cls");
+        printf("=== BIVORITA ===\n\n");
+        printf("1. Jugar\n");
+        printf("2. Salir\n");
+        printf("Opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion)
+        {
+        case 1:
+            break;
+        case 2:
+            printf("Gracias por jugar!\n");
+            return 0;
+
+        default:
+            break;
+        }
+    } while (opcion != 1 && opcion != 2);
+
+    printf("Elegi la dificultad:\n");
+    printf("1) Facil\n");
+    printf("2) Media\n");
+    printf("3) Dificil\n");
+
+    do
+    {
+        printf("Opcion: ");
+        scanf("%d", &opcion);
+        switch (opcion)
+        {
+        case 1:
+            velocidad = 200;
+            break;
+        case 2:
+            cantidad = 5;
+            velocidad = 150;
+            break;
+        case 3:
+            cantidad = 15;
+            velocidad = 100;
+            break;
+        default:
+            printf("Seleccione una dificultad valida por favor \n");
+            break;
+        }
+    } while (opcion < 1 || opcion > 3);
+
+    while (_kbhit()) // limpia el '\n' que dejó el scanf
+    {
+        _getch();
+    }
 
     inicializarTablero(tablero);
     srand(time(NULL));
-    generarManzana(&m, tablero);
 
     int gameOver = 0;
     Direccion dirActual = DERECHA;
     Serpiente s;
     inicializarSerpiente(&s, 10, 10);
     tablero[10][10] = CUERPO; // marcar la posición inicial también
+
+    generarManzana(&m, tablero);
+    tablero[m.fila][m.columna] = MANZANA;
+    generarObstaculos(tablero, obstaculos, cantidad);
 
     ocultarCursor();
 
@@ -57,18 +117,18 @@ int main()
         }
 
         // C) VERIFICACIÓN DE COLISIONES Y MOVIMIENTO
+        int crecio = (nuevaFila == m.fila && nuevaCol == m.columna);
+
         if (fueraDeLimites(nuevaFila, nuevaCol))
         {
             gameOver = 1;
         }
-        else if (colisionaConCuerpo(tablero, nuevaFila, nuevaCol))
+        else if (colisionaConCuerpoLista(&s, nuevaFila, nuevaCol, !crecio) || colisionaConObstaculo(obstaculos, cantidad, nuevaFila, nuevaCol))
         {
             gameOver = 1;
         }
         else
         {
-            int crecio = (nuevaFila == m.fila && nuevaCol == m.columna);
-
             moverSerpiente(&s, nuevaFila, nuevaCol, crecio);
             actualizarMatrizSerpiente(tablero, &s);
 
@@ -78,7 +138,7 @@ int main()
                 {
                     velocidad -= 5;
                 }
-                puntaje += 10;
+                puntaje += 1;
                 generarManzana(&m, tablero);
             }
 
@@ -106,7 +166,7 @@ int main()
 
     char nombreJugador[MAX_NOMBRE];
     printf("Ingresa tu nombre: ");
-    scanf("%s", nombreJugador);
+    scanf("%9s", nombreJugador);
     normalizarNombre(nombreJugador);
 
     listaJugadores = registrarPuntaje(listaJugadores, nombreJugador, puntaje);

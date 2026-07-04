@@ -1,9 +1,8 @@
 #ifndef JUGADORES_H
 #define JUGADORES_H
 
-#define ARCHIVO_RANKING "data/ranking.txt"
-#define MAX_NOMBRE 50
-
+#define ARCHIVO_RANKING "ranking.txt"
+#define MAX_NOMBRE 10
 typedef struct Jugador
 {
     char nombre[MAX_NOMBRE];
