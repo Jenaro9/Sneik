@@ -86,28 +86,7 @@ void generarManzana(Manzana *m, int tablero[FILAS][COLUMNAS])
     m->columna = columnaRandom;
 }
 
-// Busca si (fila, col) coincide con algun segmento de la SERPIENTE, recorriendo
-// directamente la lista enlazada (no la matriz). "ignorarCola" permite saltear
-// el ultimo nodo: si la serpiente no va a crecer este turno, ese ultimo nodo
-// se va a mover (o liberar) de todas formas, asi que pisarlo no es un choque real.
-int colisionaConCuerpoLista(Serpiente *s, int fila, int col, int ignorarCola)
-{
-    Nodo *actual = s->cabeza; // arrancamos desde la cabeza
-    while (actual != NULL)    // mientras queden nodos por revisar
-    {
-        // si hay que ignorar la cola y este es el ultimo nodo, no lo comparamos
-        if (ignorarCola && actual->siguiente == NULL)
-        {
-            break; // cortamos el while: no seguimos comparando (ya no queda nada mas igual)
-        }
-        if (actual->fila == fila && actual->columna == col) // coincide con este segmento?
-        {
-            return 1; // si, hay colision
-        }
-        actual = actual->siguiente; // pasamos al proximo segmento
-    }
-    return 0; // recorrimos todo (lo que correspondia) sin encontrar coincidencia
-}
+
 
 // Sortea "cantidad" posiciones libres y las marca como OBSTACULO, tanto en la
 // matriz (para que se dibujen) como en el array "obstaculos" (para poder

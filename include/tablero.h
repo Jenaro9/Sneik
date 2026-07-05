@@ -51,10 +51,6 @@ void generarObstaculos(int tablero[FILAS][COLUMNAS], Obstaculo obstaculos[], int
 // Recorre el array de obstaculos y devuelve 1 si (fila, columna) coincide con alguno
 int colisionaConObstaculo(Obstaculo obstaculos[], int cantidad, int fila, int columna);
 
-// Recorre la LISTA ENLAZADA (no la matriz) de la serpiente buscando si (fila, col) ya
-// esta ocupada por algun segmento del cuerpo. "ignorarCola" permite saltear el ultimo
-// nodo de la lista (util porque, si la serpiente no va a crecer este turno, la cola
-// se va a mover/liberar de todas formas, asi que pisarla no deberia contar como choque)
-int colisionaConCuerpoLista(Serpiente *s, int fila, int col, int ignorarCola);
+
 
 #endif // fin del include guard

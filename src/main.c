@@ -56,7 +56,7 @@ int main()
         switch (opcion)
         {
         case 1:
-            velocidad = 200; // mas alto = mas lento = mas facil (mas tiempo para reaccionar)
+            velocidad = 175; // mas alto = mas lento = mas facil (mas tiempo para reaccionar)
             break;
         case 2:
             cantidad = 5;    // dificultad media: 5 obstaculos en el mapa
@@ -200,10 +200,7 @@ int main()
     // Limpiamos cualquier tecla que haya quedado pendiente (por ejemplo, si el
     // jugador siguio apretando teclas justo cuando termino la partida), para
     // que no interfiera con los scanf/getch que vienen ahora en la parte de ranking
-    while (_kbhit())
-    {
-        _getch();
-    }
+    limpiarBufferTeclado();
 
     // --- GESTIÓN DE JUGADORES Y RANKING ---
     Jugador *listaJugadores = cargarRanking(); // trae del archivo todos los jugadores guardados

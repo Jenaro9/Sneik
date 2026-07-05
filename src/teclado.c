@@ -47,3 +47,11 @@ void leerTecla(Direccion *dirActual, int *gameOver)
         }
     }
 }
+void limpiarBufferTeclado()
+    {
+        while (_kbhit()) // limpia el '\n' que dejó el scanf
+        {
+            _getch();
+        }
+    }
+    

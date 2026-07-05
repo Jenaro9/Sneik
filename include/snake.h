@@ -1,18 +1,6 @@
 #ifndef SNAKE_H // Si no se definió este archivo...
 #define SNAKE_H // ...definilo ahora (evita errores si se incluye dos veces)
 
-// Enum de direcciones posibles. Internamente cada nombre es un numero entero
-// correlativo empezando en 0 (podés pensarlo como "#define ARRIBA 0", etc.,
-// pero con chequeo de tipos: el compilador sabe que una variable "Direccion"
-// solo deberia guardar uno de estos 4 valores).
-typedef enum
-{
-    ARRIBA,    // Internamente es 0
-    ABAJO,     // Internamente es 1
-    IZQUIERDA, // Internamente es 2
-    DERECHA    // Internamente es 3
-} Direccion;
-
 // Nodo de la lista enlazada simple: representa un segmento del cuerpo
 typedef struct Nodo
 {
@@ -33,12 +21,19 @@ typedef struct
 
 // --- PROTOTIPOS DE FUNCIONES (implementadas en snake.c) ---
 
+// Recorre la LISTA ENLAZADA (no la matriz) de la serpiente buscando si (fila, col) ya
+// esta ocupada por algun segmento del cuerpo. "ignorarCola" permite saltear el ultimo
+// nodo de la lista (util porque, si la serpiente no va a crecer este turno, la cola
+// se va a mover/liberar de todas formas, asi que pisarla no deberia contar como choque)
+int colisionaConCuerpoLista(Serpiente *s, int fila, int col, int ignorarCola);
+
 // Prepara la serpiente al iniciar el juego: crea el primer nodo en una posición
 void inicializarSerpiente(Serpiente *s, int filaInicial, int colInicial);
 
 // Lógica de movimiento principal: agrega cabeza, y gestiona si borra o no la cola
 // 'crecio' es un booleano (1 si comió manzana, 0 si no)
 void moverSerpiente(Serpiente *s, int nuevaFila, int nuevaCol, int crecio);
+
 
 // Al terminar el juego, libera toda la memoria reservada con malloc (evita fugas)
 void liberarSerpiente(Serpiente *s);
