@@ -229,6 +229,7 @@ int main()
     ordenarRankingDescendente(listaJugadores); // ordena antes de mostrar                                               // vuelca la lista completa de nuevo al archivo
     mostrarRanking(listaJugadores);            // imprime el ranking por pantalla
     liberarJugadores(listaJugadores);          // libera toda la memoria de esta lista (evita fugas)
-
+    printf("\nPresiona una tecla para salir...\n");
+    _getch();
     return 0; // avisa al sistema operativo que el programa termino sin errores
 }
