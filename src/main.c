@@ -225,9 +225,10 @@ int main()
     normalizarNombre(nombreJugador); // pasa el nombre a mayusculas, para no duplicar por may/min
 
     listaJugadores = registrarPuntaje(listaJugadores, nombreJugador, puntaje); // actualiza o agrega
-    guardarRanking(listaJugadores);                                            // vuelca la lista completa de nuevo al archivo
-    mostrarRanking(listaJugadores);                                            // imprime el ranking por pantalla
-    liberarJugadores(listaJugadores);                                          // libera toda la memoria de esta lista (evita fugas)
+    guardarRanking(listaJugadores);
+    ordenarRankingDescendente(listaJugadores); // ordena antes de mostrar                                               // vuelca la lista completa de nuevo al archivo
+    mostrarRanking(listaJugadores);            // imprime el ranking por pantalla
+    liberarJugadores(listaJugadores);          // libera toda la memoria de esta lista (evita fugas)
 
     return 0; // avisa al sistema operativo que el programa termino sin errores
 }

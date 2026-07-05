@@ -37,13 +37,13 @@ Jugador *cargarRanking(void)
             printf("Error: no se pudo reservar memoria.\n");
             break; // cortamos la carga acá, con lo que se pudo leer hasta ahora
         }
-        strcpy(nuevo->nombre, nombreLeido);   // copia el contenido del string leido al nodo
+        strcpy(nuevo->nombre, nombreLeido); // copia el contenido del string leido al nodo
         nuevo->puntajeMaximo = puntajeLeido;
-        nuevo->siguiente = NULL;              // por ahora es el ultimo (se puede reasignar despues)
+        nuevo->siguiente = NULL; // por ahora es el ultimo (se puede reasignar despues)
 
         if (lista == NULL) // es el primer nodo que se agrega?
         {
-            lista = nuevo;  // entonces la lista arranca en el
+            lista = nuevo; // entonces la lista arranca en el
             ultimo = nuevo;
         }
         else
@@ -123,6 +123,32 @@ void guardarRanking(Jugador *lista)
     }
 
     fclose(archivo); // cierra y "vuelca" los cambios al disco de forma definitiva
+}
+
+void ordenarRankingDescendente(Jugador *lista) // Ordena el ranking
+{
+    if (lista == NULL)
+        return; // lista vacia, nada que ordenar
+
+    Jugador *i, *j;
+    for (i = lista; i != NULL; i = i->siguiente)
+    {
+        for (j = i->siguiente; j != NULL; j = j->siguiente)
+        {
+            if (j->puntajeMaximo > i->puntajeMaximo)
+            {
+                // Intercambiamos los DATOS, no los punteros (mas simple)
+                int puntajeTemp = i->puntajeMaximo;
+                i->puntajeMaximo = j->puntajeMaximo;
+                j->puntajeMaximo = puntajeTemp;
+
+                char nombreTemp[MAX_NOMBRE];
+                strcpy(nombreTemp, i->nombre);
+                strcpy(i->nombre, j->nombre);
+                strcpy(j->nombre, nombreTemp);
+            }
+        }
+    }
 }
 
 // Imprime por pantalla todos los jugadores de la lista, en el orden en que
