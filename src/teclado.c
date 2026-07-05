@@ -1,4 +1,4 @@
-#include <conio.h>   // _kbhit, _getch
+#include <conio.h> // _kbhit, _getch
 #include "teclado.h"
 
 void leerTecla(Direccion *dirActual, int *gameOver)
@@ -48,10 +48,9 @@ void leerTecla(Direccion *dirActual, int *gameOver)
     }
 }
 void limpiarBufferTeclado()
+{
+    while (_kbhit()) // limpia el '\n' que dejó el scanf
     {
-        while (_kbhit()) // limpia el '\n' que dejó el scanf
-        {
-            _getch();
-        }
+        _getch();
     }
-    
+}

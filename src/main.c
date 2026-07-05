@@ -1,21 +1,32 @@
-#include <stdio.h>    // printf, scanf
-#include <stdlib.h>   // srand
-#include <time.h>     // time (semilla para los numeros aleatorios)
-#include <conio.h>    // _kbhit, _getch (limpiar el buffer de teclado)
-#include <windows.h>  // Sleep
-#include "tablero.h"  // FILAS, COLUMNAS, Manzana, Obstaculo, y funciones del tablero
-#include "visuales.h" // dibujoTablero, ocultarCursor
-#include "teclado.h"  // leerTecla
+#include <stdio.h>     // printf, scanf
+#include <stdlib.h>    // srand
+#include <time.h>      // time (semilla para los numeros aleatorios)
+#include <conio.h>     // _kbhit, _getch (limpiar el buffer de teclado)
+#include <windows.h>   // Sleep
+#include "tablero.h"   // FILAS, COLUMNAS, Manzana, Obstaculo, y funciones del tablero
+#include "visuales.h"  // dibujoTablero, ocultarCursor
+#include "teclado.h"   // leerTecla
 #include "jugadores.h" // Jugador, cargarRanking, registrarPuntaje, etc.
+#include "snake.h"     // Colisiones, nodos Serpiente, movimiento serpiente, etc
+
+// Definimos una cantidad constante de obstaculos por dificultad
+#define OBSTACULOS_FACIL 0
+#define OBSTACULOS_MEDIA 5
+#define OBSTACULOS_DIFICIL 15
+
+// Definimos una cantidad constante de velocidad por dificultad
+#define VELOCIDAD_FACIL 175
+#define VELOCIDAD_MEDIA 150
+#define VELOCIDAD_DIFICIL 100
 
 int main()
 {
-    int tablero[FILAS][COLUMNAS];       // la matriz del mundo del juego (20x40), sin inicializar todavia
-    Manzana m;                          // posicion actual de la manzana
-    int puntaje = 0;                    // puntos acumulados
-    int velocidad = 50;                 // ms de pausa entre frame y frame (se pisa segun dificultad elegida)
-    int opcion;                         // variable generica para leer las opciones de los menus
-    int cantidad = 0;                   // cantidad de obstaculos de la partida (depende de la dificultad)
+    int tablero[FILAS][COLUMNAS];         // la matriz del mundo del juego (20x40), sin inicializar todavia
+    Manzana m;                            // posicion actual de la manzana
+    int puntaje = 0;                      // puntos acumulados
+    int velocidad;                        // ms de pausa entre frame y frame
+    int opcion;                           // variable generica para leer las opciones de los menus
+    int cantidad = 0;                     // cantidad de obstaculos de la partida (depende de la dificultad)
     Obstaculo obstaculos[MAX_OBSTACULOS]; // array (reservado en la pila) para guardar hasta 20 obstaculos
 
     // --- MENU PRINCIPAL: Jugar / Salir ---
@@ -23,12 +34,12 @@ int main()
     // poder preguntar "opcion != 1 && opcion != 2" (todavia no existe "opcion")
     do
     {
-        system("cls");             // limpia la pantalla antes de mostrar el menu
+        system("cls"); // limpia la pantalla antes de mostrar el menu
         printf("=== BIVORITA ===\n\n");
         printf("1. Jugar\n");
         printf("2. Salir\n");
         printf("Opcion: ");
-        scanf("%d", &opcion);      // lee un numero entero desde teclado (BLOQUEA hasta que el usuario responda)
+        scanf("%d", &opcion); // lee un numero entero desde teclado (BLOQUEA hasta que el usuario responda)
 
         switch (opcion)
         {
@@ -55,16 +66,18 @@ int main()
         scanf("%d", &opcion);
         switch (opcion)
         {
+        // En cada case guardamos en las variables cantidad y velocidad, las constantes declaradas
         case 1:
-            velocidad = 175; // mas alto = mas lento = mas facil (mas tiempo para reaccionar)
+            velocidad = VELOCIDAD_FACIL;
+            cantidad = OBSTACULOS_FACIL;
             break;
         case 2:
-            cantidad = 5;    // dificultad media: 5 obstaculos en el mapa
-            velocidad = 150;
+            velocidad = VELOCIDAD_MEDIA;
+            cantidad = OBSTACULOS_MEDIA;
             break;
         case 3:
-            cantidad = 15;   // dificultad dificil: 15 obstaculos, y el doble de rapido que facil
-            velocidad = 100;
+            velocidad = VELOCIDAD_DIFICIL;
+            cantidad = OBSTACULOS_DIFICIL;
             break;
         default:
             printf("Seleccione una dificultad valida por favor \n");
@@ -76,10 +89,7 @@ int main()
     // despues de leer un numero. Si no lo "limpiamos", ese '\n' podria ser
     // leido por error mas adelante por _getch() dentro del juego. Este while
     // vacia todo lo que haya quedado pendiente en el buffer.
-    while (_kbhit()) // limpia el '\n' que dejó el scanf
-    {
-        _getch();
-    }
+    limpiarBufferTeclado(); // limpia el '\n' que dejó el scanf
 
     // --- PREPARACION DE LA PARTIDA ---
     inicializarTablero(tablero); // pone las 800 casillas en VACIO
@@ -91,8 +101,8 @@ int main()
     inicializarSerpiente(&s, 10, 10); // crea el primer nodo (cabeza) en (10, 10)
     tablero[10][10] = CUERPO;         // marcar la posición inicial también (sincroniza matriz y lista)
 
-    generarManzana(&m, tablero);       // sortea la primera manzana en una casilla libre
-    tablero[m.fila][m.columna] = MANZANA; // la marca en la matriz para que se dibuje
+    generarManzana(&m, tablero);                      // sortea la primera manzana en una casilla libre
+    tablero[m.fila][m.columna] = MANZANA;             // la marca en la matriz para que se dibuje
     generarObstaculos(tablero, obstaculos, cantidad); // sortea "cantidad" obstaculos (0 si es facil)
 
     ocultarCursor(); // esconde el cursor parpadeante de la consola
@@ -147,10 +157,14 @@ int main()
             // -el borde exacto contra el que chocamos- para dibujar la X ahi.
             int filaMarca = nuevaFila;
             int colMarca = nuevaCol;
-            if (filaMarca < 0) filaMarca = 0;                   // se fue arriba del todo -> clavar en fila 0
-            if (filaMarca >= FILAS) filaMarca = FILAS - 1;      // se fue abajo del todo -> ultima fila
-            if (colMarca < 0) colMarca = 0;                     // se fue a la izquierda del todo -> columna 0
-            if (colMarca >= COLUMNAS) colMarca = COLUMNAS - 1;  // se fue a la derecha del todo -> ultima columna
+            if (filaMarca < 0)
+                filaMarca = 0; // se fue arriba del todo -> clavar en fila 0
+            if (filaMarca >= FILAS)
+                filaMarca = FILAS - 1; // se fue abajo del todo -> ultima fila
+            if (colMarca < 0)
+                colMarca = 0; // se fue a la izquierda del todo -> columna 0
+            if (colMarca >= COLUMNAS)
+                colMarca = COLUMNAS - 1; // se fue a la derecha del todo -> ultima columna
 
             tablero[filaMarca][colMarca] = COLISION; // marca esa casilla para que se dibuje como X
             gameOver = 1;
@@ -175,7 +189,7 @@ int main()
                 {
                     velocidad -= 5; // acelera el juego un poco cada vez que come
                 }
-                puntaje += 1;              // suma un punto
+                puntaje += 1;                // suma un punto
                 generarManzana(&m, tablero); // sortea la proxima manzana
             }
 
@@ -195,7 +209,7 @@ int main()
     // ========================= FIN DEL GAME LOOP =========================
 
     printf("Juego terminado. Tu puntaje fue: %d\n", puntaje); // se ve debajo del tablero congelado con la X
-    liberarSerpiente(&s); // libera con free() cada nodo reservado con malloc
+    liberarSerpiente(&s);                                     // libera con free() cada nodo reservado con malloc
 
     // Limpiamos cualquier tecla que haya quedado pendiente (por ejemplo, si el
     // jugador siguio apretando teclas justo cuando termino la partida), para
@@ -207,13 +221,14 @@ int main()
 
     char nombreJugador[MAX_NOMBRE];
     printf("Ingresa tu nombre: ");
-    scanf("%9s", nombreJugador);       // %9s limita a 9 caracteres (deja lugar para el '\0')
-    normalizarNombre(nombreJugador);   // pasa el nombre a mayusculas, para no duplicar por may/min
+    scanf("%9s", nombreJugador);     // %9s limita a 9 caracteres (deja lugar para el '\0')
+    normalizarNombre(nombreJugador); // pasa el nombre a mayusculas, para no duplicar por may/min
 
     listaJugadores = registrarPuntaje(listaJugadores, nombreJugador, puntaje); // actualiza o agrega
-    guardarRanking(listaJugadores);    // vuelca la lista completa de nuevo al archivo
-    mostrarRanking(listaJugadores);    // imprime el ranking por pantalla
-    liberarJugadores(listaJugadores);  // libera toda la memoria de esta lista (evita fugas)
+    guardarRanking(listaJugadores);
+    ordenarRankingDescendente(listaJugadores); // ordena antes de mostrar                                               // vuelca la lista completa de nuevo al archivo
+    mostrarRanking(listaJugadores);            // imprime el ranking por pantalla
+    liberarJugadores(listaJugadores);          // libera toda la memoria de esta lista (evita fugas)
 
     return 0; // avisa al sistema operativo que el programa termino sin errores
 }

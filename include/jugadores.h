@@ -33,4 +33,6 @@ void liberarJugadores(Jugador *lista);
 // Pasa el nombre a mayusculas "en el lugar" (modifica el mismo array recibido)
 void normalizarNombre(char *nombre);
 
+// Ordena el ranking de mayor a menor
+void ordenarRankingDescendente(Jugador *lista);
 #endif

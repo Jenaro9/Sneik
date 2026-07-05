@@ -1,5 +1,4 @@
 #include "tablero.h"
-#include <stdio.h>
 #include <stdlib.h> // rand()
 
 // Recorre las FILAS x COLUMNAS casillas y pone cada una en 0 (VACIO).
@@ -7,8 +6,8 @@
 // en cero solo: contiene basura de memoria hasta que se inicializa a mano.
 void inicializarTablero(int tablero[FILAS][COLUMNAS]) // recorre la matriz iniciando todo en 0
 {
-    int i, j;                  // i = fila actual, j = columna actual (convencion universal)
-    for (i = 0; i < FILAS; i++)     // recorre cada fila...
+    int i, j;                   // i = fila actual, j = columna actual (convencion universal)
+    for (i = 0; i < FILAS; i++) // recorre cada fila...
     {
         for (j = 0; j < COLUMNAS; j++) // ...y dentro de cada fila, cada columna
         {
@@ -58,8 +57,8 @@ void actualizarMatrizSerpiente(int tablero[FILAS][COLUMNAS], Serpiente *s)
     // (nota: en esta version, la cabeza tambien queda marcada como CUERPO en la
     // matriz; visuales.c es quien decide dibujarla distinto, comparando directo
     // contra s->cabeza->fila/columna en vez de leer un valor especial del tablero)
-    Nodo *temp = s->cabeza;    // puntero auxiliar para recorrer sin perder la cabeza real
-    while (temp != NULL)       // hasta llegar al final de la lista (siguiente == NULL)
+    Nodo *temp = s->cabeza; // puntero auxiliar para recorrer sin perder la cabeza real
+    while (temp != NULL)    // hasta llegar al final de la lista (siguiente == NULL)
     {
         tablero[temp->fila][temp->columna] = CUERPO;
         temp = temp->siguiente; // avanza al proximo nodo
@@ -82,11 +81,9 @@ void generarManzana(Manzana *m, int tablero[FILAS][COLUMNAS])
         columnaRandom = rand() % COLUMNAS; // idem para columnas
     } while (tablero[filaRandom][columnaRandom] != 0); // repetir mientras la casilla NO este vacia
 
-    m->fila = filaRandom;       // guardamos el resultado en la Manzana real (se paso por puntero)
+    m->fila = filaRandom; // guardamos el resultado en la Manzana real (se paso por puntero)
     m->columna = columnaRandom;
 }
-
-
 
 // Sortea "cantidad" posiciones libres y las marca como OBSTACULO, tanto en la
 // matriz (para que se dibujen) como en el array "obstaculos" (para poder
