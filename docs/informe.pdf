@@ -1,0 +1,8 @@
+Logica Principal:
+Se lee la tecla → se calcula la próxima posición de la cabeza.
+Se chequea fueraDeLimites → si es cierto, game over.
+Se chequea si la próxima posición tiene una manzana → esto define si la serpiente "crece" o no en este movimiento.
+Julián actualiza la lista (agrega nodo cabeza, y si no comió, saca el nodo cola).
+Vos actualizás la matriz en base a la lista actualizada: ponés 1 en la celda de la nueva cabeza, y si la cola se movió, ponés 0 en la celda que la cola dejó libre.
+Si comió la manzana, generás una nueva en otra posición libre.
+Se redibuja el tablero completo.
