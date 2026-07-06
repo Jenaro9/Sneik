@@ -100,7 +100,7 @@ void dibujoTablero(int tablero[FILAS][COLUMNAS], Serpiente *s, int puntaje)
 
 // Oculta el cursor parpadeante de la consola de Windows (si no, se ve tildando
 // sobre el dibujo del tablero en cada frame, bastante molesto visualmente)
-void ocultarCursor(void)
+void ocultarCursor()
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO info;

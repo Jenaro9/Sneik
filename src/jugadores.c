@@ -6,7 +6,7 @@
 // Lee el archivo de ranking (si existe) y arma una lista enlazada en memoria
 // con todos los jugadores guardados. Se llama una vez, al terminar la partida,
 // antes de registrar el puntaje nuevo.
-Jugador *cargarRanking(void)
+Jugador *cargarRanking()
 {
     Jugador *lista = NULL;  // arranca vacia (NULL = "todavia no hay ningun nodo")
     Jugador *ultimo = NULL; // puntero auxiliar al ULTIMO nodo agregado, para enganchar rapido

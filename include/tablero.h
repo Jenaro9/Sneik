@@ -6,12 +6,11 @@
 #define FILAS 20    // cantidad de filas del tablero (alto del mundo del juego)
 #define COLUMNAS 40 // cantidad de columnas del tablero (ancho del mundo del juego)
 
-#define VACIO 0          // valor de una casilla sin nada
-#define CUERPO 1         // valor de una casilla ocupada por el cuerpo de la serpiente
-#define MANZANA 2        // valor de una casilla ocupada por la manzana
-#define OBSTACULO 3      // valor de una casilla ocupada por un obstaculo fijo
-#define MAX_OBSTACULOS 20 // tope maximo de obstaculos que puede tener una partida (tamano del array)
-#define COLISION 4        // NUEVO: valor especial para marcar la casilla exacta donde chocamos
+#define VACIO 0     // valor de una casilla sin nada
+#define CUERPO 1    // valor de una casilla ocupada por el cuerpo de la serpiente
+#define MANZANA 2   // valor de una casilla ocupada por la manzana
+#define OBSTACULO 3 // valor de una casilla ocupada por un obstaculo fijo
+#define COLISION 4  // valor especial para marcar la casilla exacta donde chocamos
 
 #include "snake.h" // necesitamos el tipo "Serpiente" para el prototipo de actualizarMatrizSerpiente
 
@@ -50,7 +49,5 @@ void generarObstaculos(int tablero[FILAS][COLUMNAS], Obstaculo obstaculos[], int
 
 // Recorre el array de obstaculos y devuelve 1 si (fila, columna) coincide con alguno
 int colisionaConObstaculo(Obstaculo obstaculos[], int cantidad, int fila, int columna);
-
-
 
 #endif // fin del include guard

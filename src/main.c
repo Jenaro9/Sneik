@@ -21,23 +21,23 @@
 
 int main()
 {
-    int tablero[FILAS][COLUMNAS];         // la matriz del mundo del juego (20x40), sin inicializar todavia
-    Manzana m;                            // posicion actual de la manzana
-    int puntaje = 0;                      // puntos acumulados
-    int velocidad;                        // ms de pausa entre frame y frame
-    int opcion;                           // variable generica para leer las opciones de los menus
-    int cantidad = 0;                     // cantidad de obstaculos de la partida (depende de la dificultad)
-    Obstaculo obstaculos[MAX_OBSTACULOS]; // array (reservado en la pila) para guardar hasta 20 obstaculos
+    int tablero[FILAS][COLUMNAS];             // la matriz del mundo del juego (20x40), sin inicializar todavia
+    Manzana m;                                // posicion actual de la manzana
+    int puntaje = 0;                          // puntos acumulados
+    int velocidad;                            // ms de pausa entre frame y frame
+    int opcion;                               // variable generica para leer las opciones de los menus
+    int cantidad = 0;                         // cantidad de obstaculos de la partida (depende de la dificultad)
+    Obstaculo obstaculos[OBSTACULOS_DIFICIL]; // array (reservado en la pila) para guardar hasta la cantidad de obstaculos en dificil
 
     // --- MENU PRINCIPAL: Jugar / Salir ---
     // do-while porque hace falta mostrar el menu al menos una vez antes de
     // poder preguntar "opcion != 1 && opcion != 2" (todavia no existe "opcion")
+    system("cls"); // limpia la pantalla antes de mostrar el menu de inicio
+    printf("=== BIVORITA ===\n\n");
+    printf("1. Jugar\n");
+    printf("2. Salir\n");
     do
     {
-        system("cls"); // limpia la pantalla antes de mostrar el menu
-        printf("=== BIVORITA ===\n\n");
-        printf("1. Jugar\n");
-        printf("2. Salir\n");
         printf("Opcion: ");
         scanf("%d", &opcion); // lee un numero entero desde teclado (BLOQUEA hasta que el usuario responda)
 
@@ -50,11 +50,14 @@ int main()
             return 0; // termina el programa directamente, ni siquiera arranca el juego
 
         default:
+            printf("Opcion invalida, ingrese una opcion valida por favor\n");
             break; // opcion invalida: no hace nada, y el do-while vuelve a mostrar el menu
         }
     } while (opcion != 1 && opcion != 2); // repite mientras la opcion no sea ninguna de las dos validas
 
     // --- MENU DE DIFICULTAD ---
+    system("cls"); // limpia la pantalla antes de mostrar el menu de dificultad
+
     printf("Elegi la dificultad:\n");
     printf("1) Facil\n");
     printf("2) Media\n");
@@ -106,11 +109,11 @@ int main()
     generarObstaculos(tablero, obstaculos, cantidad); // sortea "cantidad" obstaculos (0 si es facil)
 
     ocultarCursor(); // esconde el cursor parpadeante de la consola
+    system("cls");   // limpia la pantalla antes de mostrar los controles de juego
 
-    printf("Usa W A S D para moverte. Evita usar el mouse dentro de la consola.\n");
+    printf("Usa W A S D para moverte ( X para salir ). \n");
     printf("Presiona cualquier tecla para comenzar...\n");
-    _getch(); // esta si BLOQUEA: espera una tecla cualquiera antes de arrancar el loop
-
+    _getch(); // bloquea hasta que el usuario presione algo
     // ============================= GAME LOOP =============================
     while (!gameOver) // se repite mientras gameOver siga en 0; cada vuelta es un frame
     {
@@ -189,7 +192,7 @@ int main()
                 {
                     velocidad -= 5; // acelera el juego un poco cada vez que come
                 }
-                puntaje += 1;                // suma un punto
+                puntaje += 5;                // suma 5 puntos por manzana comida
                 generarManzana(&m, tablero); // sortea la proxima manzana
             }
 
@@ -208,8 +211,8 @@ int main()
     }
     // ========================= FIN DEL GAME LOOP =========================
 
-    printf("Juego terminado. Tu puntaje fue: %d\n", puntaje); // se ve debajo del tablero congelado con la X
-    liberarSerpiente(&s);                                     // libera con free() cada nodo reservado con malloc
+    printf("Juego terminado. Tu puntaje fue: %d y alcanzaste una longitud de: %d\n", puntaje, s.longitud); // se ve debajo del tablero congelado con la X
+    liberarSerpiente(&s);                                                                                  // libera con free() cada nodo reservado con malloc
 
     // Limpiamos cualquier tecla que haya quedado pendiente (por ejemplo, si el
     // jugador siguio apretando teclas justo cuando termino la partida), para
@@ -229,6 +232,7 @@ int main()
     ordenarRankingDescendente(listaJugadores); // ordena antes de mostrar                                               // vuelca la lista completa de nuevo al archivo
     mostrarRanking(listaJugadores);            // imprime el ranking por pantalla
     liberarJugadores(listaJugadores);          // libera toda la memoria de esta lista (evita fugas)
-
+    printf("\nPresiona una tecla para salir...\n");
+    _getch();
     return 0; // avisa al sistema operativo que el programa termino sin errores
 }
