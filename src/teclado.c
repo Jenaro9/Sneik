@@ -47,10 +47,10 @@ void leerTecla(Direccion *dirActual, int *gameOver)
         }
     }
 }
-void limpiarBufferTeclado()
+void limpiarBufferTeclado() // limpia el '\n' que dejó el scanf
 {
-    while (_kbhit()) // limpia el '\n' que dejó el scanf
+    while (_kbhit()) // Devuelve 0 si no hay nada pendiente
     {
-        _getch();
+        _getch(); // limpia el buffer
     }
 }

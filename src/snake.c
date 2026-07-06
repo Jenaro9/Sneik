@@ -100,8 +100,8 @@ int colisionaConCuerpoLista(Serpiente *s, int fila, int col, int ignorarCola)
 // --- LIMPIEZA DE MEMORIA (EVITAR FUGAS) ---
 void liberarSerpiente(Serpiente *s)
 {
-    Nodo *actual = s->cabeza;   // puntero auxiliar que va a recorrer toda la lista
-    Nodo *siguiente;            // variable auxiliar para no perder la referencia al avanzar
+    Nodo *actual = s->cabeza; // puntero auxiliar que va a recorrer toda la lista
+    Nodo *siguiente;          // variable auxiliar para no perder la referencia al avanzar
 
     // Recorremos nodo por nodo eliminando la memoria de a uno
     while (actual != NULL)
